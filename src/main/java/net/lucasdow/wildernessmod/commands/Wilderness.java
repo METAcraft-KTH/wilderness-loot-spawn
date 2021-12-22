@@ -1,6 +1,7 @@
 package net.lucasdow.wildernessmod.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.lucasdow.wildernessmod.CustomLootTables;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -9,6 +10,7 @@ import net.minecraft.block.Material;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.loot.LootTables;
@@ -18,7 +20,11 @@ import net.minecraft.particle.ParticleType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.StructureWorldAccess;
@@ -41,13 +47,13 @@ public class Wilderness implements Command {
         return (int) ((Math.random() * (max - min)) + min);
     }
 
-    private static void placeLootChest(ServerWorld world, Random random) {
+    private static void placeLootChest(ServerCommandSource source, Random random) throws CommandSyntaxException {
+        ServerWorld world = source.getWorld();
         int xCoordinate = getXY(MIN_SPAWN_X, MAX_SPAWN_X);
         int zCoordinate = getXY(MIN_SPAWN_Z, MAX_SPAWN_Z);
         int yCoordinate;
         BlockPos blockPos = new BlockPos(xCoordinate, 319, zCoordinate);
         for (yCoordinate = 319; yCoordinate > -64; yCoordinate--) {
-            System.out.println("i: " + yCoordinate + " y" + blockPos.getY() + " block: " + world.getBlockState(blockPos).getBlock() );
             if (world.getBlockState(blockPos).getBlock().equals(Blocks.AIR)) {
                 blockPos = new BlockPos(xCoordinate, blockPos.getY()-1, zCoordinate);
             }
@@ -58,13 +64,40 @@ public class Wilderness implements Command {
                 world.setBlockState(blockPos, blockState);
 
                 Inventory blockEntity = (Inventory) world.getBlockEntity(blockPos);
-                ItemStack stack = new ItemStack(Items.DIAMOND, 10);
+                ItemStack diamondItem = new ItemStack(Items.DIAMOND, 1);
+                ItemStack TNTItem = new ItemStack(Items.TNT, 1);
+                ItemStack BOEItem = new ItemStack(Items.EXPERIENCE_BOTTLE, 1);
+                ItemStack structureItem = new ItemStack(Items.STRUCTURE_BLOCK, 1).setCustomName(new LiteralText("Battle Token"));
                 assert blockEntity != null;
-                blockEntity.setStack(0, stack);
+                blockEntity.setStack(0, TNTItem);
+                blockEntity.setStack(1, TNTItem);
+                blockEntity.setStack(7, TNTItem);
+                blockEntity.setStack(8, TNTItem);
+                blockEntity.setStack(9+0, TNTItem);
+                blockEntity.setStack(9+8, TNTItem);
+                blockEntity.setStack(9*2+0, TNTItem);
+                blockEntity.setStack(9*2+1, TNTItem);
+                blockEntity.setStack(9*2+7, TNTItem);
+                blockEntity.setStack(9*2+8, TNTItem);
+                blockEntity.setStack(4, diamondItem);
+                blockEntity.setStack(9+3, diamondItem);
+                blockEntity.setStack(9+5, diamondItem);
+                blockEntity.setStack(2*9+4, diamondItem);
+                blockEntity.setStack(9+1, BOEItem);
+                blockEntity.setStack(9+2, BOEItem);
+                blockEntity.setStack(9+6, BOEItem);
+                blockEntity.setStack(9+7, BOEItem);
+                blockEntity.setStack(9+4, structureItem);
 
-                for (PlayerEntity player : world.getServer().getPlayerManager().getPlayerList()) {
-                    player.sendMessage(new LiteralText("test"), false);
-                }
+
+                Text text = new LiteralText("Loot crate dropped at: ").formatted(Formatting.AQUA)
+                        .append(new LiteralText("X: " + xCoordinate + ", Z: " + zCoordinate + ". ").formatted(Formatting.RED))
+                        .append(new LiteralText("(This message will only be displayed once!)").formatted(Formatting.DARK_PURPLE));
+
+
+                source.getServer().getPlayerManager().broadcast(text, MessageType.CHAT, source.getPlayer().getUuid());
+                source.getWorld().playSound(null, blockPos, SoundEvents.BLOCK_PORTAL_TRAVEL, SoundCategory.NEUTRAL, 1f, 1f);
+                    //player.sendMessage(new LiteralText("test").formatted(Formatting.AQUA), false);
 
                 break;
             }
@@ -80,10 +113,9 @@ public class Wilderness implements Command {
                 .executes(context -> {
                     System.out.println("Placing random loot!");
 
-                    ServerWorld world = context.getSource().getWorld();
                     Random random = context.getSource().getWorld().getRandom();
 
-                    Wilderness.placeLootChest(world, random);
+                    Wilderness.placeLootChest(context.getSource(), random);
 
                     return 0;
                 })
