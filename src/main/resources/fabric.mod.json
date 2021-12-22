@@ -1,29 +1,27 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "wildernessmod",
   "version": "${version}",
 
-  "name": "Example Mod",
+  "name": "Wilderness Mod",
   "description": "This is an example description! Tell everyone what your mod is about!",
   "authors": [
-    "Me!"
+    "Lucas Dow"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/modid/icon.png",
+  "icon": "assets/wildernessmod/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.fabricmc.example.ExampleMod"
+      "net.lucasdow.wildernessmod.WildernessMod"
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "wildernessmod.mixins.json"
   ],
 
   "depends": {
