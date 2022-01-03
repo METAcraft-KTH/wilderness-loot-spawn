@@ -3,7 +3,7 @@ package net.lucasdow.wildernessmod;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback;
 import net.lucasdow.wildernessmod.commands.CommandRegister;
-import net.lucasdow.wildernessmod.commands.Wilderness;
+import net.lucasdow.wildernessmod.commands.RandomLoot;
 import net.minecraft.loot.LootTables;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
