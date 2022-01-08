@@ -1,68 +1,78 @@
 package net.lucasdow.wildernessmod.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
-import net.lucasdow.LootCrates.PVPLootCrate1;
-import net.lucasdow.LootCrates.PVPLootCrate2;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.context.CommandContext;
+import net.lucasdow.LootCrates.PVPLootCrateBase;
+import net.lucasdow.LootCrates.RandomLootBase;
+import net.lucasdow.LootCrates.tiers.pvp.*;
 import net.lucasdow.wildernessmod.WildernessMod;
-import net.minecraft.block.BeaconBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.StructureBlock;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LightningEntity;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.MusicDiscItem;
-import net.minecraft.network.MessageType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.MusicSound;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.math.BlockPos;
 
+import java.util.HashMap;
 import java.util.Random;
-import java.util.UUID;
 
+import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
 public class PVPLoot implements Command {
+
+    public static HashMap<Integer, PVPLootCrateBase> tierClasses = new HashMap<Integer, PVPLootCrateBase>();
+
+    public static void init() {
+        tierClasses.put(1, new PvPTier1());
+        tierClasses.put(2, new PvPTier2());
+        tierClasses.put(3, new PvPTier3());
+        tierClasses.put(4, new PvPTier4());
+        tierClasses.put(5, new PvPTier5());
+        tierClasses.put(6, new PvPTier6());
+        tierClasses.put(7, new PvPTier7());
+    }
+
+    public void spawnPVPLootChest(int tier, CommandContext<ServerCommandSource> context) {
+        PVPLootCrateBase randomLootTierClass = tierClasses.get(tier);
+        randomLootTierClass.setTier(tier);
+        randomLootTierClass.setSource(context.getSource(), context.getSource().getWorld().getRandom());
+        randomLootTierClass.createChest();
+    }
 
     @Override
     public void register(CommandDispatcher<ServerCommandSource> dispatcher, Boolean dedicated) {
         dispatcher.register(literal("wilderness")
             .then(literal("spawnPVPLoot")
-                .then(literal("type-one")
-                    .requires(source -> source.hasPermissionLevel(4))
-                    .executes(context -> {
-                        WildernessMod.LOGGER.info("Spawning PVP-loot!");
+                .requires(source -> source.hasPermissionLevel(4))
+                .executes(context -> {
+                    WildernessMod.LOGGER.info("Spawning PVP-loot!");
 
-                        Random random = context.getSource().getWorld().getRandom();
+                    int playerCount = PlayerCount.getPlayerCount(context);
+                    int tier = PlayerCount.getTier(playerCount);
 
-                        PVPLootCrate1.placeLootChest(context.getSource(), random);
+                    if (tier == 0) { return 0; }
 
-                        return 0;
-                    })
-                )
+                    spawnPVPLootChest(tier, context);
+
+                    return 0;
+                })
             )
         );
 
         dispatcher.register(literal("wilderness")
-            .then(literal("spawnPVPLoot")
-                .then(literal("type-two")
+            .then(literal("forcePVPLootSpawn")
+                .then(argument("tier", IntegerArgumentType.integer())
                     .requires(source -> source.hasPermissionLevel(4))
                     .executes(context -> {
-                        WildernessMod.LOGGER.info("Spawning PVP-loot!");
+                        int tier = IntegerArgumentType.getInteger(context, "tier");
+                        PlayerEntity player = context.getSource().getPlayer();
 
-                        Random random = context.getSource().getWorld().getRandom();
+                        if (tier <= 0 || tier > 7) {
+                            player.sendMessage(new LiteralText("Tier must be between 1 to 7 inclusive!").formatted(Formatting.RED), false);
+                            return 1;
+                        }
 
-                        PVPLootCrate2.placeLootChest(context.getSource(), random);
+                        spawnPVPLootChest(tier, context);
 
                         return 0;
                     })

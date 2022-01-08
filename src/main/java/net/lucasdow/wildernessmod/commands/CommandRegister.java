@@ -12,9 +12,16 @@ interface Command {
 public class CommandRegister {
 
     public static void init() {
+        PVPLoot.init();
+        RandomLoot.init();
+
         CommandRegistrationCallback.EVENT.register(((dispatcher, dedicated) -> {
             new RandomLoot().register(dispatcher, dedicated);
             new PVPLoot().register(dispatcher, dedicated);
+            new PlayerCount().register(dispatcher, dedicated);
+            new Loot().register(dispatcher, dedicated);
+            new StoryTelling().register(dispatcher, dedicated);
+            new SpawnChestCommand().register(dispatcher, dedicated);
         }));
     }
 }
