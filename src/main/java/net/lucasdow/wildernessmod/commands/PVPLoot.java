@@ -4,7 +4,6 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.lucasdow.LootCrates.PVPLootCrateBase;
-import net.lucasdow.LootCrates.RandomLootBase;
 import net.lucasdow.LootCrates.tiers.pvp.*;
 import net.lucasdow.wildernessmod.WildernessMod;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,7 +12,6 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.util.Formatting;
 
 import java.util.HashMap;
-import java.util.Random;
 
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
@@ -23,13 +21,13 @@ public class PVPLoot implements Command {
     public static HashMap<Integer, PVPLootCrateBase> tierClasses = new HashMap<Integer, PVPLootCrateBase>();
 
     public static void init() {
-        tierClasses.put(1, new PvPTier1());
-        tierClasses.put(2, new PvPTier2());
-        tierClasses.put(3, new PvPTier3());
-        tierClasses.put(4, new PvPTier4());
-        tierClasses.put(5, new PvPTier5());
-        tierClasses.put(6, new PvPTier6());
         tierClasses.put(7, new PvPTier7());
+        tierClasses.put(6, new PvPTier6());
+        tierClasses.put(5, new PvPTier5());
+        tierClasses.put(4, new PvPTier4());
+        tierClasses.put(3, new PvPTier3());
+        tierClasses.put(2, new PvPTier2());
+        tierClasses.put(1, new PvPTier1());
     }
 
     public void spawnPVPLootChest(int tier, CommandContext<ServerCommandSource> context) {

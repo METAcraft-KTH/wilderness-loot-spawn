@@ -30,7 +30,7 @@ public class PVPLootCrateBase extends LootCrate {
     public ItemStack structureBlock() {
         ItemStack structureBlock = new ItemStack(Items.STRUCTURE_BLOCK, 1);
         structureBlock.setCustomName(new LiteralText("Tier " + this.tier).formatted(Formatting.LIGHT_PURPLE)
-                .append(new LiteralText(" Battle Token ").formatted(Formatting.DARK_PURPLE)));
+                .append(new LiteralText(" Battle Token ").formatted(Formatting.GOLD)));
         return structureBlock;
     }
 

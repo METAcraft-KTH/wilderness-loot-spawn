@@ -22,30 +22,16 @@ public class Loot implements Command {
     public void displayRandomLoot(CommandContext<ServerCommandSource> context, int tier) throws CommandSyntaxException {
         LiteralText message = new LiteralText("");
 
-        switch(tier) {
-            case 7:
-                message = new LiteralText("- 4 TNT\n- 1 Diamond\n");
-                break;
-            case 6:
-                message = new LiteralText("- 8 TNT\n- 2 Diamonds\n- 1 Golden Apple\n");
-                break;
-            case 5:
-                message = new LiteralText("- 12 TNT\n- 2 Diamonds\n- 1 Turtle Helmet\n");
-                break;
-            case 4:
-                message = new LiteralText("- 32 TNT\n- 4 Diamonds\n- 8 Golden Apples\n- 32 Obsidian\n");
-                break;
-            case 3:
-                message = new LiteralText("- 32 TNT\n- 8 Diamonds\n- 32 Golden Apples\n- 2 Shulker Shells\n- 1 Netherite Ingot\n");
-                break;
-            case 2:
-                message = new LiteralText("- 32 Diamonds\n- 2 Beacons\n- 2 Shulker Shells\n- 2 Netherite Ingots\n- 2 End Crystals\n- 1 Enchanted Golden Apple\n");
-                break;
-            case 1:
-                message = new LiteralText("- 64 Diamonds\n- 4 Beacons\n- 2 Enchanted Golden Apples\n- 1 Pair of Premium Wings (Elytra)\n");
-                break;
-            default:
-                break;
+        switch (tier) {
+            case 1 -> message = new LiteralText("- 4 TNT\n- 1 Diamond\n");
+            case 2 -> message = new LiteralText("- 8 TNT\n- 2 Diamonds\n- 1 Golden Apple\n");
+            case 3 -> message = new LiteralText("- 12 TNT\n- 2 Diamonds\n- 1 Turtle Helmet\n");
+            case 4 -> message = new LiteralText("- 32 TNT\n- 4 Diamonds\n- 8 Golden Apples\n- 32 Obsidian\n");
+            case 5 -> message = new LiteralText("- 32 TNT\n- 8 Diamonds\n- 32 Golden Apples\n- 2 Shulker Shells\n- 1 Netherite Ingot\n");
+            case 6 -> message = new LiteralText("- 32 Diamonds\n- 2 Beacons\n- 2 Shulker Shells\n- 2 Netherite Ingots\n- 2 End Crystals\n- 1 Enchanted Golden Apple\n");
+            case 7 -> message = new LiteralText("- 64 Diamonds\n- 4 Beacons\n- 2 Enchanted Golden Apples\n- 1 Pair of Premium Wings (Elytra)\n");
+            default -> {
+            }
         }
 
         LiteralText playerRange = PlayerCount.getTierPlayerRange(tier);
@@ -60,31 +46,17 @@ public class Loot implements Command {
     public void displayPVPLoot(CommandContext<ServerCommandSource> context, int tier) throws CommandSyntaxException {
         LiteralText message = new LiteralText("");
 
-        switch(tier) {
-            case 7:
-                message = new LiteralText("- 4 TNT\n- 2 Diamonds\n- Tier 7 Battle Token\n");
-                break;
-            case 6:
-                message = new LiteralText("- 8 TNT\n- 4 Diamonds\n-4 Golden Apples\n- Tier 6 Battle Token\n");
-                break;
-            case 5:
-                message = new LiteralText("- 8 Diamonds\n-8 Golden Apples\n- Tier 5 Battle Token\n");
-                break;
-            case 4:
-                message = new LiteralText("- 32 TNT\n- 10 Diamonds\n- 16 Golden Apples\n- 1 Diamond Block\n- 1 Shulker Shell\n- Tier 4 Battle Token\n");
-                break;
-            case 3:
-                message = new LiteralText("- 64 TNT\n- 32 Diamonds\n- 16 Golden Apples\n- 2 Shulker Shells\n- 2 Netherite Ingots\n- 4 End Crystals\n- Tier 3 Battle Token\n");
-                break;
-            case 2:
-                message = new LiteralText("- 32 Diamonds\n- 2 Beacons\n- 2 Shulker Boxes\n- 4 Netherite Ingots\n- 1 Enchanted Golden Apple\n- Tier 2 Battle Token\n");
-                break;
-            case 1:
-                message = new LiteralText("- 4 Diamond Blocks\n- 6 Beacons\n- 2 Enchanted Golden Apples\n- 2 Netherite Blocks\n- 1 Titanium Chestplate (Netherite Chest plate with Protection V)" +
-                        "\n- 1 Atom Sword (Netherite sword with Sharpness VI)\n- Tier 1 Battle Token\n");
-                break;
-            default:
-                break;
+        switch (tier) {
+            case 1 -> message = new LiteralText("- 4 TNT\n- 2 Diamonds\n- Tier 1 Battle Token\n");
+            case 2 -> message = new LiteralText("- 8 TNT\n- 4 Diamonds\n-4 Golden Apples\n- Tier 2 Battle Token\n");
+            case 3 -> message = new LiteralText("- 8 Diamonds\n-8 Golden Apples\n- Tier 3 Battle Token\n");
+            case 4 -> message = new LiteralText("- 32 TNT\n- 10 Diamonds\n- 16 Golden Apples\n- 1 Diamond Block\n- 1 Shulker Shell\n- Tier 4 Battle Token\n");
+            case 5 -> message = new LiteralText("- 64 TNT\n- 32 Diamonds\n- 16 Golden Apples\n- 2 Shulker Shells\n- 2 Netherite Ingots\n- 4 End Crystals\n- Tier 5 Battle Token\n");
+            case 6 -> message = new LiteralText("- 32 Diamonds\n- 2 Beacons\n- 2 Shulker Boxes\n- 4 Netherite Ingots\n- 1 Enchanted Golden Apple\n- Tier 6 Battle Token\n");
+            case 7 -> message = new LiteralText("- 4 Diamond Blocks\n- 6 Beacons\n- 2 Enchanted Golden Apples\n- 2 Netherite Blocks\n- 1 Titanium Chestplate (Netherite Chest plate with Protection V)" +
+                    "\n- 1 Atom Sword (Netherite sword with Sharpness VI)\n- Tier 7 Battle Token\n");
+            default -> {
+            }
         }
 
         LiteralText playerRange = PlayerCount.getTierPlayerRange(tier);
