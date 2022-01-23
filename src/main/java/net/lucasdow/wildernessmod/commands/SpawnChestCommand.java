@@ -28,7 +28,7 @@ public class SpawnChestCommand implements Command {
                     .requires(source -> source.hasPermissionLevel(4))
                     .executes(context -> {
                         String lootType = StringArgumentType.getString(context, "loot_type");
-                        int playerCount = context.getSource().getWorld().getPlayers().toArray().length;
+                        int playerCount = context.getSource().getServer().getCurrentPlayerCount();
                         PlayerCount.setPlayerCount(context.getSource().getServer().getDataCommandStorage(), playerCount);
 
                         switch (lootType) {

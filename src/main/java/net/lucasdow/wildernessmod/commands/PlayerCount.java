@@ -131,7 +131,7 @@ public class PlayerCount implements Command{
                     .executes(context -> {
                         WildernessMod.LOGGER.info("Setting player count!");
 
-                        int playerCount = context.getSource().getWorld().getPlayers().toArray().length;
+                        int playerCount = context.getSource().getServer().getCurrentPlayerCount();
                         setPlayerCount(context.getSource().getServer().getDataCommandStorage(), playerCount);
                         context.getSource().getPlayer().sendMessage(new LiteralText("Player count set: " + playerCount + ", tier: " + getTier(playerCount)), false);
 
